@@ -23,6 +23,7 @@ import com.squareup.picasso.Picasso;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
+    
     Context context;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
