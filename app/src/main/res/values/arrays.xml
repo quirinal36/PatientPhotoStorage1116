@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="department">
+        <item>수술실</item>
+        <item>응급처치실</item>
+        <item>외래</item>
+        <item>2병동</item>
+        <item>3병동</item>
+        <item>4병동</item>
+        <item>진료부</item>
+        <item>진료지원부</item>
+        <item>기타</item>
+    </string-array>
+
+    <string-array name="classification">
+        <item>응급</item>
+        <item>드레싱</item>
+        <item>수술전</item>
+        <item>수술직후</item>
+        <item>영상정보</item>
+        <item>기타정보</item>
+        <item>환자정보</item>
+    </string-array>
+</resources>

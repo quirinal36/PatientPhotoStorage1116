@@ -1,9 +1,12 @@
 package me.synology.hsbong.patientphotostorage;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -20,10 +23,12 @@ import com.squareup.picasso.Callback;
 import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 
+import me.synology.hsbong.patientphotostorage.view.MyInfoFragment;
+
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    
+
     Context context;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,24 +57,8 @@ public class MainActivity extends AppCompatActivity
 
         context = getApplicationContext();
 
-        final String ImgUrl ="https://www.maxpixel.net/static/photo/2x/Weather-Sky-Image-Blue-Clouds-Air-White-Space-2076878.jpg";
-        ImageView imgView = findViewById(R.id.imageView2);
-        Picasso.with(context).load(ImgUrl).networkPolicy(NetworkPolicy.NO_CACHE)
-                .resize(300,300)
-                //.rotate(45)
-                .placeholder(android.R.drawable.ic_dialog_info)
-                .error(android.R.drawable.ic_dialog_info)
-                .into(imgView, new Callback() {
-            @Override
-            public void onSuccess() {
-                Toast.makeText(context, "succeed to load image", Toast.LENGTH_SHORT).show();
-            }
+     //   final String ImgUrl ="https://www.maxpixel.net/static/photo/2x/Weather-Sky-Image-Blue-Clouds-Air-White-Space-2076878.jpg";
 
-            @Override
-            public void onError() {
-                Toast.makeText(context, "failed to load image", Toast.LENGTH_SHORT).show();
-            }
-        });
 
 
     }
@@ -110,15 +99,26 @@ public class MainActivity extends AppCompatActivity
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
+        Fragment fragment = null;
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+
         int id = item.getItemId();
 
         if (id == R.id.nav_camera) {
             // Handle the camera action
+            Intent intent = new Intent(context, LoginActivity.class);
+            startActivity(intent);
+
         } else if (id == R.id.nav_gallery) {
 
         } else if (id == R.id.nav_slideshow) {
 
         } else if (id == R.id.nav_manage) {
+            fragment = new MyInfoFragment();
+            Bundle args = new Bundle();
+            args.putString("param1", "01026079765");
+            args.putString("param2", "12355");
+            fragment.setArguments(args);
 
         } else if (id == R.id.nav_share) {
 
@@ -126,6 +126,10 @@ public class MainActivity extends AppCompatActivity
 
         }
 
+        if(fragment != null) {
+            fragmentTransaction.replace(R.id.content_main, fragment);
+            fragmentTransaction.commit();
+        }
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;

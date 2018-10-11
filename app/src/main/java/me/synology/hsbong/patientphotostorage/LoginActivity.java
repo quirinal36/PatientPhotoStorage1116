@@ -64,7 +64,7 @@ public class LoginActivity extends AppCompatActivity {
         String email = _emailText.getText().toString();
         String password = _passwordText.getText().toString();
         if(email.isEmpty() || !Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-            _emailText.setError("enter a vailid email address");
+            _emailText.setError("enter a valid email address");
             valid = false;
         }
         else{
