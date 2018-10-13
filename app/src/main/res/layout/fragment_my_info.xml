@@ -29,13 +29,15 @@
                     android:layout_height="wrap_content"
                     android:paddingTop="5dp"
                     android:paddingBottom="5dp"
-                    android:text="이름" />
+                    android:text="이름"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Light.SearchResult.Title" />
 
                 <TextView
                     android:id="@+id/text_view_myname"
                     android:layout_width="264dp"
                     android:layout_height="wrap_content"
-                    android:text="LeeHG" />
+                    android:text="LeeHG"
+                    android:textAppearance="@android:style/TextAppearance" />
             </TableRow>
 
             <TableRow
@@ -87,22 +89,22 @@
                 android:weightSum="1">
 
                 <TextView
-                    android:id="@+id/text_view_myaddress_guide"
+                    android:id="@+id/text_view_department_guide"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_weight=".3"
                     android:paddingTop="5dp"
                     android:paddingBottom="5dp"
-                    android:layout_weight=".3"
-                    android:text="주소" />
+                    android:text="부서" />
 
                 <TextView
-                    android:id="@+id/text_view_myaddress"
+                    android:id="@+id/text_view_department"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight=".7"
                     android:paddingTop="5dp"
                     android:paddingBottom="5dp"
-                    android:text="전주시 완산구 효자동" />
+                    android:text="소속 부서" />
             </TableRow>
         </TableLayout>
 

@@ -1,5 +1,7 @@
 package me.synology.hsbong.patientphotostorage.model;
 
+import android.app.Application;
+
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.json.JSONException;
@@ -13,12 +15,15 @@ public class Person {
     private int id;
     private String name;
     private int age;
-    private String address;
+
     private String email;
     private String phone;
     private String password;
     private String uniqueId;
     private String photo;
+    private String department;
+
+
 
     public int getId() {
         return id;
@@ -44,12 +49,12 @@ public class Person {
         this.age = age;
     }
 
-    public String getAddress() {
-        return address;
+    public String getDepartment() {
+        return department;
     }
 
-    public void setAddress(String address) {
-        this.address = address;
+    public void setDepartment(String department) {
+        this.department = department;
     }
 
     public String getEmail() {
@@ -97,7 +102,7 @@ public class Person {
 
         person.setId(json.getInt("id"));
         person.setName(json.getString("name"));
-        person.setAddress(json.getString("address"));
+        person.setDepartment(json.getString("department"));
         person.setEmail(json.getString("email"));
         person.setPhone(json.getString("phone"));
         person.setPhoto(json.getString("photo"));

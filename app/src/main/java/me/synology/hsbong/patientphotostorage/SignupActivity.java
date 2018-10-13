@@ -48,6 +48,7 @@ public class SignupActivity extends AppCompatActivity {
     @BindView(R.id.input_name) EditText _nameText;
     @BindView(R.id.input_email) EditText _emailText;
     @BindView(R.id.input_mobile) EditText _mobileText;
+    @BindView(R.id.departmentSpinner) Spinner _departmentSpinner;
     @BindView(R.id.btn_signup) Button _signupButton;
     @BindView(R.id.link_login) TextView _loginLink;
     @BindView(R.id.buttonUploadImage) Button _uploadImageButton;
@@ -164,11 +165,13 @@ public class SignupActivity extends AppCompatActivity {
                 String name = _nameText.getText().toString();
                 String email = _emailText.getText().toString();
                 String mobile = _mobileText.getText().toString();
+                String department = _departmentSpinner.toString();
 
                 param.put("name", name);
                 param.put("email", email);
                 param.put("phone", mobile);
                 param.put("unique_id", unique);
+                param.put("department", department);
 
                 JSONObject json = new JSONObject(param);
                 Log.d(TAG, json.toString());

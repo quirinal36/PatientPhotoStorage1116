@@ -7,15 +7,15 @@
         <item
             android:id="@+id/nav_camera"
             android:icon="@drawable/ic_login"
-            android:title="로그인" />
+            android:title="사진등록" />
         <item
             android:id="@+id/nav_gallery"
             android:icon="@drawable/ic_menu_gallery"
-            android:title="Gallery" />
+            android:title="정보검색" />
         <item
             android:id="@+id/nav_slideshow"
             android:icon="@drawable/ic_menu_slideshow"
-            android:title="Slideshow" />
+            android:title="즐겨찾기" />
         <item
             android:id="@+id/nav_manage"
             android:icon="@drawable/ic_menu_manage"

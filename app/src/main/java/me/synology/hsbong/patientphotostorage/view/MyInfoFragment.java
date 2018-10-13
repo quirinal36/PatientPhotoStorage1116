@@ -5,6 +5,7 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,6 +28,7 @@ import org.json.JSONObject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import me.synology.hsbong.patientphotostorage.MainActivity;
+import me.synology.hsbong.patientphotostorage.MyApp;
 import me.synology.hsbong.patientphotostorage.R;
 import me.synology.hsbong.patientphotostorage.model.Person;
 
@@ -43,15 +45,12 @@ public class MyInfoFragment extends Fragment {
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
-    // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
 
+    @BindView(R.id.imageViewMyProfile) ImageView _myProfile;
+    @BindView(R.id.text_view_department) TextView _myDepartment;
 
-    @BindView(R.id.imageViewMyProfile)
-    ImageView _myProfile;
-    @BindView(R.id.text_view_myaddress)
-    TextView _myAddress;
 
     @Override
     public void onResume() {
@@ -80,7 +79,7 @@ public class MyInfoFragment extends Fragment {
      * @param param2 Parameter 2.
      * @return A new instance of fragment MyInfoFragment.
      */
-    // TODO: Rename and change types and number of parameters
+
     public static MyInfoFragment newInstance(String param1, String param2) {
         MyInfoFragment fragment = new MyInfoFragment();
         Bundle args = new Bundle();
@@ -109,28 +108,17 @@ public class MyInfoFragment extends Fragment {
         return view;
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
 
+    private void setView(final String phone, final String deviceId) {
 
+        RequestQueue rq = Volley.newRequestQueue(getContext());
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
-private void setView(final String phone, final String deviceId) {
-    RequestQueue rq = Volley.newRequestQueue(getContext());
-    StringBuilder url = new StringBuilder();
-    url.append("http://www.bacoder.kr/getPerson.jsp");
-    url.append("?phone="+phone);
-    url.append("&deviceId="+deviceId);
+        StringBuilder url = new StringBuilder();
+        url.append("http://www.bacoder.kr/getPerson.jsp");
+        url.append("?phone="+phone);
+        url.append("&deviceId="+deviceId);
 
-    JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url.toString(), null,
+      JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url.toString(), null,
             new Response.Listener<JSONObject>() {
                 @Override
                 public void onResponse(JSONObject response) {
@@ -138,12 +126,12 @@ private void setView(final String phone, final String deviceId) {
                     try{
                         JSONObject myInfo = response;
                         Person person = Person.parsePerson(myInfo);
-                        _myAddress.setText(person.getAddress());
+                        _myDepartment.setText(person.getDepartment());
                         _myEmail.setText(person.getEmail());
                         _myName.setText(person.getName());
                         _myPhone.setText(person.getPhone());
                         Picasso.with(getContext()).load(person.getPhoto()).placeholder(R.drawable.avatar).error(R.drawable.avatar).into(_myProfile);
-
+                        ((MyApp) getActivity().getApplicationContext()).setUserInfo("profilePhoto", person.getPhoto());
                     }
                     catch (JSONException e){
                         e.printStackTrace();
@@ -157,6 +145,6 @@ private void setView(final String phone, final String deviceId) {
         }
     });
     rq.add(jsonObjectRequest);
-}
+    }
 
 }

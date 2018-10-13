@@ -68,12 +68,7 @@ public class MainActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
 
-
         context = getApplicationContext();
-
-
-
-
 
     }
 
@@ -93,7 +88,9 @@ public class MainActivity extends AppCompatActivity
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
-        getUserName();
+        setProfile();
+
+
         return true;
     }
 
@@ -123,8 +120,8 @@ public class MainActivity extends AppCompatActivity
 
         if (id == R.id.nav_camera) {
             // Handle the camera action
-            Intent intent = new Intent(context, LoginActivity.class);
-            startActivity(intent);
+           // Intent intent = new Intent(context, LoginActivity.class);
+           // startActivity(intent);
 
         } else if (id == R.id.nav_gallery) {
 
@@ -143,7 +140,7 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_share) {
 
         } else if (id == R.id.nav_send) {
-           // fragment = new SignupFragment();
+         //   fragment = new SignupFragment();
 
         }
 
@@ -158,9 +155,35 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
-    public void getUserName() {
-        SharedPreferences pref = getSharedPreferences("bacoder", MODE_PRIVATE);
+    public void setProfile() {
         TextView textView = (TextView) findViewById(R.id.userName);
-        textView.setText(pref.getString("device_phone_num",""));
+        textView.setText(((MyApp) getApplicationContext()).getUserInfo("name"));
+        TextView textView2 = (TextView) findViewById(R.id.department);
+        textView2.setText(((MyApp) getApplicationContext()).getUserInfo("phone"));
+
+        ImageView imageView = (ImageView) findViewById(R.id.profileIcon);
+        ((MyApp) getApplicationContext()).getUserInfo("profilePhoto");
+
+        Picasso.with(getApplicationContext()).load(((MyApp) getApplicationContext()).getUserInfo("profilePhoto")).placeholder(R.drawable.avatar).error(R.drawable.avatar).into(imageView);
+        imageView.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                SharedPreferences pref = getSharedPreferences("bacoder", MODE_PRIVATE);
+                String phone = EtcLib.getInstance().getPhoneNumber(getApplicationContext());
+
+                Fragment fragment = null;
+                FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+                fragment = new MyInfoFragment();
+                Bundle args = new Bundle();
+                args.putString("param1", phone);
+                args.putString("param2", pref.getString("device_uuid",""));
+                fragment.setArguments(args);
+                fragmentTransaction.replace(R.id.content_main, fragment);
+                fragmentTransaction.commit();
+
+              DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+              drawer.closeDrawer(GravityCompat.START);
+            }
+        });
     }
 }
