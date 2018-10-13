@@ -3,6 +3,7 @@ package me.synology.hsbong.patientphotostorage;
 import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.PixelFormat;
 import android.os.Build;
@@ -11,11 +12,13 @@ import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.view.Window;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -28,6 +31,7 @@ import com.android.volley.toolbox.Volley;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.UUID;
 
 
 public class InitActivity extends Activity {
@@ -55,6 +59,15 @@ public class InitActivity extends Activity {
     }
 
     private void StartAnimations(final String phone) {
+        SharedPreferences pref = getSharedPreferences("bacoder", MODE_PRIVATE);
+        SharedPreferences.Editor editor = pref.edit();
+        editor.putString("device_phone_num", phone);
+
+        if(pref.getString("device_uuid", "").length() == 0){
+            editor.putString("device_uuid", UUID.randomUUID().toString());
+        }
+        editor.commit();
+
         Animation anim = AnimationUtils.loadAnimation(this, R.anim.alpha);
         anim.reset();
         LinearLayout l = (LinearLayout) findViewById(R.id.lin_lay);
@@ -71,14 +84,21 @@ public class InitActivity extends Activity {
               @Override
               public void run() {
 
-        final String url = "http://www.bacoder.kr/getPerson.jsp?phone=01026079765&password=12355";
+        //final String url = "http://www.bacoder.kr/getPerson.jsp?phone=01026079765&password=12355";
+        StringBuilder url = new StringBuilder();
+        SharedPreferences pref = getSharedPreferences("bacoder", MODE_PRIVATE);
+
+                  url.append(getString(R.string.server_address)).append("/getPerson.jsp")
+                .append("?phone=").append(phone)
+                .append("&deviceId=").append(pref.getString("device_uuid",""));
+
 
         RequestQueue rq = Volley.newRequestQueue(getApplicationContext());
-        JsonObjectRequest JsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
+        JsonObjectRequest JsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url.toString(), null, new Response.Listener<JSONObject>() {
 
             @Override
             public void onResponse(JSONObject response) {
-                // Log.d(TAG, response.toString());
+                 Log.d("InitActivity", response.toString());
                 try {
                     int result = response.getInt("id");
                     if (result > 0) {
@@ -129,6 +149,7 @@ public class InitActivity extends Activity {
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         if(requestCode == STORAGE_PERMISSION_CODE && (grantResults[0]==PackageManager.PERMISSION_GRANTED && grantResults[1]==PackageManager.PERMISSION_GRANTED)){
             String phone = EtcLib.getInstance().getPhoneNumber(this);
+
 
             StartAnimations(phone);
         }

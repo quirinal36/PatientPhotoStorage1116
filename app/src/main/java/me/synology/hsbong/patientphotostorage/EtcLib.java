@@ -45,6 +45,7 @@ public class EtcLib {
         {
             number = tm.getLine1Number();
         }
+        /*
         if (number != null && !number.equals("") && number.length() >= 8) {
             if (Locale.getDefault().getCountry().equals("KR")) {
                 if (number.startsWith("82")) {
@@ -61,6 +62,7 @@ public class EtcLib {
         } else {
             number = getDeviceId(context);
         }
+*/
 
         return number;
     }
