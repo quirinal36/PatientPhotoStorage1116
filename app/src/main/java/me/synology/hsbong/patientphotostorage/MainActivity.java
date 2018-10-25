@@ -32,6 +32,7 @@ import com.squareup.picasso.Picasso;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import me.synology.hsbong.patientphotostorage.list.BoardFragment;
 import me.synology.hsbong.patientphotostorage.list.PatientListFragment;
 import me.synology.hsbong.patientphotostorage.sign.SignupFragment;
 import me.synology.hsbong.patientphotostorage.view.MyInfoFragment;
@@ -155,6 +156,7 @@ public class MainActivity extends AppCompatActivity
             fragment = new PatientListFragment();
 
         } else if (id == R.id.nav_gallery) {
+            fragment = new BoardFragment();
 
         } else if (id == R.id.nav_slideshow) {
 

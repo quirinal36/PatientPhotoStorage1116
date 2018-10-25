@@ -42,7 +42,6 @@ import butterknife.OnClick;
 public class SignupActivity extends AppCompatActivity {
     private static final String TAG = "SignupActivity";
     private ArrayAdapter adapter;
-    private Spinner spinner;
     private String phoneId;
 
     @BindView(R.id.input_name) EditText _nameText;
@@ -87,9 +86,9 @@ public class SignupActivity extends AppCompatActivity {
         TextView textView = (TextView) findViewById(R.id.deviceId);
         textView.setText(phoneId);
 
-        spinner = (Spinner) findViewById(R.id.departmentSpinner);
+//        _departmentSpinner = (Spinner) findViewById(R.id.departmentSpinner);
         adapter = ArrayAdapter.createFromResource(this, R.array.department, android.R.layout.simple_spinner_dropdown_item);
-        spinner.setAdapter(adapter);
+        _departmentSpinner.setAdapter(adapter);
 
 
    /*     _loginLink.setOnClickListener(new View.OnClickListener() {
@@ -165,7 +164,7 @@ public class SignupActivity extends AppCompatActivity {
                 String name = _nameText.getText().toString();
                 String email = _emailText.getText().toString();
                 String mobile = _mobileText.getText().toString();
-                String department = _departmentSpinner.toString();
+                String department = _departmentSpinner.getSelectedItem().toString();
 
                 param.put("name", name);
                 param.put("email", email);

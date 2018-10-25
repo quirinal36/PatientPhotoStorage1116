@@ -5,11 +5,14 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+
 public class Patient {
     private int id;
     private String photo;
     private String p_date;
     private String name;
+  //  private ArrayList<String> photoList;
 
     public int getId() {
         return id;
