@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import me.synology.hsbong.patientphotostorage.R;
 import me.synology.hsbong.patientphotostorage.model.Board;
 import me.synology.hsbong.patientphotostorage.model.Patient;
+import me.synology.hsbong.patientphotostorage.model.Photo;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,7 +22,7 @@ import java.util.List;
 public class PhotoListFragment extends Fragment {
 
         private static final String ARG_COLUMN_COUNT = "column-count";
-        private int mColumnCount = 1;
+        private int mColumnCount = 2;
 
 
         public PhotoListFragment() {
@@ -53,22 +54,50 @@ public class PhotoListFragment extends Fragment {
 
             // Set the adapter
             if (view instanceof RecyclerView) {
-                List<Patient> list = new ArrayList<Patient>();
-                    Patient patient1 = new Patient();
-                    patient1.setId(123123);
-                    patient1.setName("홍길동");
-                    patient1.setName("2018.10.30");
-                    patient1.setPhoto("");
+                List<Photo> list = new ArrayList<Photo>();
+                    Photo photo1 = new Photo();
+                    photo1.setId(123123);
+                    photo1.setPatientName("홍길동");
+                    photo1.setDate("2018.10.30");
+                    photo1.setPhotoUrl("https://www.bloter.net/wp-content/uploads/2016/08/13239928_1604199256575494_4289308691415234194_n.jpg");
+                    photo1.setClassification("수술중");
+                    photo1.setDoctor("봉황세");
+                    photo1.setUploader("전담간호사");
+                    photo1.setComment("수술중 사진입니다.");
 
-                Patient patient2 = new Patient();
-                patient2.setId(123321);
-                patient2.setName("이돈석");
-                patient2.setName("2018.10.29");
-                patient2.setPhoto("");
+                Photo photo2 = new Photo();
+                photo2.setId(123456);
+                photo2.setPatientName("아수라");
+                photo2.setDate("2018.10.30");
+                photo2.setPhotoUrl("https://www.bloter.net/wp-content/uploads/2016/08/13239928_1604199256575494_4289308691415234194_n.jpg");
+                photo2.setClassification("드레싱");
+                photo2.setDoctor("봉황세");
+                photo2.setUploader("전담간호사");
+                photo2.setComment("병동 드레싱 사진입니다.");
+
+                Photo photo3 = new Photo();
+                photo3.setId(123456);
+                photo3.setPatientName("김구라");
+                photo3.setDate("2018.10.30");
+                photo3.setPhotoUrl("https://www.bloter.net/wp-content/uploads/2016/08/13239928_1604199256575494_4289308691415234194_n.jpg");
+                photo3.setClassification("드레싱");
+                photo3.setDoctor("봉황세");
+                photo3.setUploader("전담간호사");
+                photo3.setComment("병동 드레싱 사진입니다.");
 
 
-                list.add(patient1);
-                list.add(patient2);
+
+                list.add(photo1);
+                list.add(photo2);
+                list.add(photo3);
+                list.add(photo2);
+                list.add(photo2);
+                list.add(photo2);
+                list.add(photo2);
+                list.add(photo2);
+                list.add(photo2);
+                list.add(photo2);
+                list.add(photo2);
 
                 Context context = view.getContext();
                 RecyclerView recyclerView = (RecyclerView) view;
@@ -83,19 +112,5 @@ public class PhotoListFragment extends Fragment {
         }
 
 
-
-
-
-
-        /**
-         * This interface must be implemented by activities that contain this
-         * fragment to allow an interaction in this fragment to be communicated
-         * to the activity and potentially other fragments contained in that
-         * activity.
-         * <p/>
-         * See the Android Training lesson <a href=
-         * "http://developer.android.com/training/basics/fragments/communicating.html"
-         * >Communicating with Other Fragments</a> for more information.
-         */
 
     }

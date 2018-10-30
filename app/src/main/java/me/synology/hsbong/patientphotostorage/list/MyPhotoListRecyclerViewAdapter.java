@@ -1,34 +1,36 @@
 package me.synology.hsbong.patientphotostorage.list;
 
 import android.content.Context;
+import android.media.Image;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.squareup.picasso.Callback;
+import com.squareup.picasso.Picasso;
+
 import me.synology.hsbong.patientphotostorage.R;
-import me.synology.hsbong.patientphotostorage.list.PhotoListFragment.OnListFragmentInteractionListener;
-import me.synology.hsbong.patientphotostorage.list.dummy.DummyContent.DummyItem;
-import me.synology.hsbong.patientphotostorage.model.Board;
-import me.synology.hsbong.patientphotostorage.model.Patient;
+import me.synology.hsbong.patientphotostorage.model.Photo;
 
 import java.util.List;
 
 
 public class MyPhotoListRecyclerViewAdapter extends RecyclerView.Adapter<MyPhotoListRecyclerViewAdapter.ViewHolder> {
 
-        private final List<Patient> mValues;
+        private final List<Photo> mValues;
         private final String TAG = this.getClass().getSimpleName();
         private Context mContext;
 
-        public MyPhotoListRecyclerViewAdapter(List<Patient> items, Context context) {
+        public MyPhotoListRecyclerViewAdapter(List<Photo> items, Context context) {
             mValues = items;
             mContext = context;
-            for(Patient patient : items){
-                Log.d(TAG, patient.toString());
+            for(Photo photo : items){
+                Log.d(TAG, photo.toString());
             }
         }
 
@@ -42,10 +44,25 @@ public class MyPhotoListRecyclerViewAdapter extends RecyclerView.Adapter<MyPhoto
         @Override
         public void onBindViewHolder(final me.synology.hsbong.patientphotostorage.list.MyPhotoListRecyclerViewAdapter.ViewHolder holder, int position) {
             holder.mItem = mValues.get(position);
-            holder.mIdView.setText(String.valueOf(mValues.get(position).getId()));
 
-            holder.mContentView.setText(mValues.get(position).getTitle());
-            holder.mWriter.setText(mValues.get(position).getWriter());
+            holder.mIdView.setText(String.valueOf(mValues.get(position).getId()));
+            holder.mNameView.setText(mValues.get(position).getPatientName());
+            holder.mClassificationView.setText(mValues.get(position).getClassification());
+            holder.mUploaderView.setText(mValues.get(position).getUploader());
+            holder.mClassificationView.setText(mValues.get(position).getClassification());
+
+            Picasso.with(mContext).load(mValues.get(position).getPhotoUrl()).placeholder(R.drawable.avatar).into(holder.mImageView, new Callback() {
+                @Override
+                public void onSuccess() {
+                    Toast.makeText(mContext, "성공", Toast.LENGTH_SHORT).show();
+                }
+
+                @Override
+                public void onError() {
+                    Toast.makeText(mContext, "실패", Toast.LENGTH_SHORT).show();
+                }
+            });
+
 
             holder.mView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -64,21 +81,25 @@ public class MyPhotoListRecyclerViewAdapter extends RecyclerView.Adapter<MyPhoto
         public class ViewHolder extends RecyclerView.ViewHolder {
             public final View mView;
             public final TextView mIdView;
-            public final TextView mContentView;
-            public final TextView mWriter;
-            public Board mItem;
+            public final TextView mNameView;
+            public final TextView mClassificationView;
+            public final TextView mUploaderView;
+            public final ImageView mImageView;
+            public Photo mItem;
 
             public ViewHolder(View view) {
                 super(view);
                 mView = view;
-                mIdView = (TextView) view.findViewById(R.id.board_number);
-                mContentView = (TextView) view.findViewById(R.id.board_title);
-                mWriter = (TextView) view.findViewById(R.id.board_writer);
+                mIdView = (TextView) view.findViewById(R.id.patientId_photo);
+                mNameView = (TextView) view.findViewById(R.id.patientName_photo);
+                mImageView = (ImageView) view.findViewById(R.id.photo_url);
+                mClassificationView = (TextView) view.findViewById(R.id.classification_photo);
+                mUploaderView = (TextView) view.findViewById(R.id.uploader_photo);
             }
 
             @Override
             public String toString() {
-                return super.toString() + " '" + mContentView.getText() + "'";
+                return super.toString() + " '" + mNameView.getText() + "'";
             }
         }
     }

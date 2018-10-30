@@ -34,6 +34,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import me.synology.hsbong.patientphotostorage.list.BoardFragment;
 import me.synology.hsbong.patientphotostorage.list.PatientListFragment;
+import me.synology.hsbong.patientphotostorage.list.PhotoListFragment;
 import me.synology.hsbong.patientphotostorage.sign.SignupFragment;
 import me.synology.hsbong.patientphotostorage.view.MyInfoFragment;
 
@@ -153,7 +154,7 @@ public class MainActivity extends AppCompatActivity
             // Handle the camera action
            // Intent intent = new Intent(context, LoginActivity.class);
            // startActivity(intent);
-            fragment = new PatientListFragment();
+            fragment = new PhotoListFragment();
 
         } else if (id == R.id.nav_gallery) {
             fragment = new BoardFragment();
