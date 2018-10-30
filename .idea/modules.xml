@@ -2,8 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/PatientPhotoStorage.iml" filepath="$PROJECT_DIR$/PatientPhotoStorage.iml" />
-      <module fileurl="file://C:\Users\bongh\AndroidStudioProjects\PatientPhotoStorage\.idea\PatientPhotoStorage.iml" filepath="C:\Users\bongh\AndroidStudioProjects\PatientPhotoStorage\.idea\PatientPhotoStorage.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/PatientPhotoStorage.iml" filepath="$PROJECT_DIR$/.idea/PatientPhotoStorage.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>
   </component>

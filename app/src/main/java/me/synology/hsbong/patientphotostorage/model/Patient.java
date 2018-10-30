@@ -9,9 +9,11 @@ import java.util.ArrayList;
 
 public class Patient {
     private int id;
+    private String name;
     private String photo;
     private String p_date;
-    private String name;
+    private String doctor;
+
   //  private ArrayList<String> photoList;
 
     public int getId() {
