@@ -9,7 +9,16 @@ public class Photo {
     private String date;
     private String uploader;
     private String comment;
+    private int accessLv;
 
+
+    public int getAccessLv() {
+        return accessLv;
+    }
+
+    public void setAccessLv(int accessLv) {
+        this.accessLv = accessLv;
+    }
 
     public int getId() {
         return id;
