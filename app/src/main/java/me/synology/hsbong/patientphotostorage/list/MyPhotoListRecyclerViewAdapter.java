@@ -45,7 +45,7 @@ public class MyPhotoListRecyclerViewAdapter extends RecyclerView.Adapter<MyPhoto
         public void onBindViewHolder(final me.synology.hsbong.patientphotostorage.list.MyPhotoListRecyclerViewAdapter.ViewHolder holder, int position) {
             holder.mItem = mValues.get(position);
 
-            holder.mIdView.setText(String.valueOf(mValues.get(position).getId()));
+            holder.mIdView.setText(String.valueOf(mValues.get(position).getPatientId()));
             holder.mNameView.setText(mValues.get(position).getPatientName());
             holder.mClassificationView.setText(mValues.get(position).getClassification());
             holder.mUploaderView.setText(mValues.get(position).getUploader());

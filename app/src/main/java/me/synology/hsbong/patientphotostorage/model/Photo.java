@@ -1,7 +1,8 @@
 package me.synology.hsbong.patientphotostorage.model;
 
 public class Photo {
-    private int id;
+    private int photoId;
+    private int patientId;
     private String patientName;
     private String photoUrl;
     private String classification;
@@ -12,20 +13,28 @@ public class Photo {
     private int accessLv;
 
 
+    public int getPhotoId() {
+        return photoId;
+    }
+
+    public void setPhotoId(int photoId) {
+        this.photoId = photoId;
+    }
+
+    public int getPatientId() {
+        return patientId;
+    }
+
+    public void setPatientId(int patientId) {
+        this.patientId = patientId;
+    }
+
     public int getAccessLv() {
         return accessLv;
     }
 
     public void setAccessLv(int accessLv) {
         this.accessLv = accessLv;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 
     public String getPatientName() {

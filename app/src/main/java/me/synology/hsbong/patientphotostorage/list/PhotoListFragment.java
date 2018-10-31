@@ -56,7 +56,7 @@ public class PhotoListFragment extends Fragment {
             if (view instanceof RecyclerView) {
                 List<Photo> list = new ArrayList<Photo>();
                     Photo photo1 = new Photo();
-                    photo1.setId(123123);
+                    photo1.setPatientId(123123);
                     photo1.setPatientName("홍길동");
                     photo1.setDate("2018.10.30");
                     photo1.setPhotoUrl("https://www.bloter.net/wp-content/uploads/2016/08/13239928_1604199256575494_4289308691415234194_n.jpg");
@@ -66,7 +66,7 @@ public class PhotoListFragment extends Fragment {
                     photo1.setComment("수술중 사진입니다.");
 
                 Photo photo2 = new Photo();
-                photo2.setId(123456);
+                photo2.setPatientId(123456);
                 photo2.setPatientName("아수라");
                 photo2.setDate("2018.10.30");
                 photo2.setPhotoUrl("https://www.bloter.net/wp-content/uploads/2016/08/13239928_1604199256575494_4289308691415234194_n.jpg");
@@ -76,7 +76,7 @@ public class PhotoListFragment extends Fragment {
                 photo2.setComment("병동 드레싱 사진입니다.");
 
                 Photo photo3 = new Photo();
-                photo3.setId(123456);
+                photo3.setPatientId(123456);
                 photo3.setPatientName("김구라");
                 photo3.setDate("2018.10.30");
                 photo3.setPhotoUrl("https://www.bloter.net/wp-content/uploads/2016/08/13239928_1604199256575494_4289308691415234194_n.jpg");
