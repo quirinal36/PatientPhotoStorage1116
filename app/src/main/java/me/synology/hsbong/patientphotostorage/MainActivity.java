@@ -32,6 +32,7 @@ import com.squareup.picasso.Picasso;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import me.synology.hsbong.patientphotostorage.fragment.SimpleCameraIntentFragment;
 import me.synology.hsbong.patientphotostorage.list.BoardFragment;
 import me.synology.hsbong.patientphotostorage.list.PatientListFragment;
 import me.synology.hsbong.patientphotostorage.list.PhotoListFragment;
@@ -160,6 +161,7 @@ public class MainActivity extends AppCompatActivity
             fragment = new BoardFragment();
 
         } else if (id == R.id.nav_slideshow) {
+            fragment = new SimpleCameraIntentFragment();
 
         } else if (id == R.id.nav_manage) {
             SharedPreferences pref = getSharedPreferences("bacoder", MODE_PRIVATE);

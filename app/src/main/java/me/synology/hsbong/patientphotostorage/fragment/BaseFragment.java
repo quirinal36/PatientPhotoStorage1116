@@ -22,8 +22,11 @@
 
 package me.synology.hsbong.patientphotostorage.fragment;
 
-import android.app.Fragment;
+
 import android.net.Uri;
+import android.support.v4.app.Fragment;
+//import android.app.Fragment;
+
 import android.os.Bundle;
 
 /**

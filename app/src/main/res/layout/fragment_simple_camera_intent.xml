@@ -31,7 +31,7 @@
         android:layout_height="fill_parent"
         android:id="@+id/imageViewFullSized"
         android:layout_gravity="center_horizontal"
-        android:src="@drawable/placeholder" />
+        android:src="@drawable/avatar" />
 
     <ImageView
         android:layout_width="100dp"
@@ -39,7 +39,7 @@
         android:layout_marginTop="10dp"
         android:id="@+id/imageViewThumbnail"
         android:layout_gravity="center_horizontal"
-        android:src="@drawable/placeholder" />
+        android:src="@drawable/avatar" />
 
     <Button
         android:layout_width="fill_parent"
