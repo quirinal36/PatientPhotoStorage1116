@@ -58,7 +58,10 @@ public class InitActivity extends Activity {
     ///Runtime Permission
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        if(requestCode == STORAGE_PERMISSION_CODE && (grantResults[0]==PackageManager.PERMISSION_GRANTED && grantResults[1]==PackageManager.PERMISSION_GRANTED)){
+        if(requestCode == STORAGE_PERMISSION_CODE &&
+                (grantResults[0]==PackageManager.PERMISSION_GRANTED
+                        && grantResults[1]==PackageManager.PERMISSION_GRANTED
+                        && grantResults[2]==PackageManager.PERMISSION_GRANTED)){
             String phone = EtcLib.getInstance().getPhoneNumber(this);
 
 
@@ -66,7 +69,11 @@ public class InitActivity extends Activity {
         }
         else{
             if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.READ_PHONE_STATE, Manifest.permission.CAMERA},
+                requestPermissions(new String[]{
+                        Manifest.permission.READ_EXTERNAL_STORAGE,
+                                Manifest.permission.READ_PHONE_STATE,
+                                Manifest.permission.CAMERA,
+                                Manifest.permission.WRITE_EXTERNAL_STORAGE},
                         STORAGE_PERMISSION_CODE);
             }
         }
@@ -75,13 +82,18 @@ public class InitActivity extends Activity {
     private void requestPermission() {
         if(ContextCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED
                 && ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED
+                && ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
             && ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
             String phone = EtcLib.getInstance().getPhoneNumber(this);
 
             StartAnimations(phone);
             return;
         }
-    ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.READ_PHONE_STATE, Manifest.permission.CAMERA},
+    ActivityCompat.requestPermissions(this, new String[]{
+            Manifest.permission.READ_EXTERNAL_STORAGE,
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                    Manifest.permission.READ_PHONE_STATE,
+                    Manifest.permission.CAMERA},
             STORAGE_PERMISSION_CODE);
     }
     ///Runtime Permission
@@ -146,7 +158,7 @@ public class InitActivity extends Activity {
                             editor.putString("department", userDepartment);
                             editor.commit();
 
-
+/*
                             if (result > 0) {
                                 Toast.makeText(getBaseContext(), userName + " 님 로그인 성공", Toast.LENGTH_LONG).show();
                                 Intent intent = new Intent(InitActivity.this, MainActivity.class);
@@ -160,6 +172,15 @@ public class InitActivity extends Activity {
                                 startActivity(intent);
                                 InitActivity.this.finish();
                             }
+*/
+                            Toast.makeText(getBaseContext(), userName + " 님 로그인 성공", Toast.LENGTH_LONG).show();
+                            Intent intent = new Intent(InitActivity.this, MainActivity.class);
+                            intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                            startActivity(intent);
+                            InitActivity.this.finish();
+
+
+
 
                         } catch (JSONException e) {
                             e.printStackTrace();

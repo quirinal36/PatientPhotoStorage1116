@@ -3,6 +3,7 @@ package me.synology.hsbong.patientphotostorage;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -38,9 +39,14 @@ import me.synology.hsbong.patientphotostorage.list.PatientListFragment;
 import me.synology.hsbong.patientphotostorage.list.PhotoListFragment;
 import me.synology.hsbong.patientphotostorage.sign.SignupFragment;
 import me.synology.hsbong.patientphotostorage.view.MyInfoFragment;
+import me.synology.hsbong.patientphotostorage.view.PhotoUploadFragment;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+
+    // Required for camera operations in order to save the image file on resume.
+    private String mCurrentPhotoPath = null;
+    private Uri mCapturedImageURI = null;
 
    // @BindView(R.id.userName) TextView _userName;
 
@@ -174,6 +180,7 @@ public class MainActivity extends AppCompatActivity
             fragment.setArguments(args);
 
         } else if (id == R.id.nav_share) {
+            fragment = new PhotoUploadFragment();
 
         } else if (id == R.id.nav_send) {
          //   fragment = new SignupFragment();
@@ -221,5 +228,32 @@ public class MainActivity extends AppCompatActivity
               drawer.closeDrawer(GravityCompat.START);
             }
         });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.content_main);
+        fragment.onActivityResult(requestCode, resultCode, data);
+
+    }
+
+    /**
+     * Getters and setters.
+     */
+
+    public String getCurrentPhotoPath() {
+        return mCurrentPhotoPath;
+    }
+
+    public void setCurrentPhotoPath(String mCurrentPhotoPath) {
+        this.mCurrentPhotoPath = mCurrentPhotoPath;
+    }
+
+    public Uri getCapturedImageURI() {
+        return mCapturedImageURI;
+    }
+
+    public void setCapturedImageURI(Uri mCapturedImageURI) {
+        this.mCapturedImageURI = mCapturedImageURI;
     }
 }

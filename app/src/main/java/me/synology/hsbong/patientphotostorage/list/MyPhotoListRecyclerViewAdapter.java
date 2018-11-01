@@ -51,18 +51,19 @@ public class MyPhotoListRecyclerViewAdapter extends RecyclerView.Adapter<MyPhoto
             holder.mUploaderView.setText(mValues.get(position).getUploader());
             holder.mClassificationView.setText(mValues.get(position).getClassification());
 
-            Picasso.with(mContext).load(mValues.get(position).getPhotoUrl()).placeholder(R.drawable.avatar).into(holder.mImageView, new Callback() {
-                @Override
-                public void onSuccess() {
-                    Toast.makeText(mContext, "성공", Toast.LENGTH_SHORT).show();
-                }
+            if(mValues.get(position).getPhotoUrl()!=null && mValues.get(position).getPhotoUrl().length()>0) {
+                Picasso.with(mContext).load(mValues.get(position).getPhotoUrl()).placeholder(R.drawable.avatar).into(holder.mImageView, new Callback() {
+                    @Override
+                    public void onSuccess() {
+                        Toast.makeText(mContext, "성공", Toast.LENGTH_SHORT).show();
+                    }
 
-                @Override
-                public void onError() {
-                    Toast.makeText(mContext, "실패", Toast.LENGTH_SHORT).show();
-                }
-            });
-
+                    @Override
+                    public void onError() {
+                        Toast.makeText(mContext, "실패", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
 
             holder.mView.setOnClickListener(new View.OnClickListener() {
                 @Override

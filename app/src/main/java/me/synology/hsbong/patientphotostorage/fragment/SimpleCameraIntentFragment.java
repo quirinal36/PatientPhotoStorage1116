@@ -32,6 +32,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -44,8 +45,8 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import me.synology.hsbong.patientphotostorage.MainActivity;
 import me.synology.hsbong.patientphotostorage.R;
-import me.synology.hsbong.patientphotostorage.CameraActivity;
 import me.synology.hsbong.patientphotostorage.ImageUtil;
 
 import java.io.File;
@@ -135,18 +136,12 @@ public class SimpleCameraIntentFragment extends BaseFragment implements Button.O
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 
         // Ensure that there's a camera activity to handle the intent
-        CameraActivity activity = (CameraActivity)getActivity();
+        MainActivity activity = (MainActivity)getActivity();
         if (takePictureIntent.resolveActivity(activity.getPackageManager()) != null) {
             // Create the File where the photo should go.
             // If you don't do this, you may get a crash in some devices.
             File photoFile = null;
-            try {
                 photoFile = createImageFile();
-            } catch (IOException ex) {
-                // Error occurred while creating the File
-                Toast toast = Toast.makeText(activity, "There was a problem saving the photo...", Toast.LENGTH_SHORT);
-                toast.show();
-            }
             // Continue only if the File was successfully created
             if (photoFile != null) {
                 Uri fileUri = Uri.fromFile(photoFile);
@@ -169,7 +164,7 @@ public class SimpleCameraIntentFragment extends BaseFragment implements Button.O
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_TAKE_PHOTO && resultCode == Activity.RESULT_OK) {
             addPhotoToGallery();
-            CameraActivity activity = (CameraActivity)getActivity();
+            MainActivity activity = (MainActivity)getActivity();
 
             // Show the full sized image.
             setFullImageFromFilePath(activity.getCurrentPhotoPath(), mImageView);
@@ -179,26 +174,34 @@ public class SimpleCameraIntentFragment extends BaseFragment implements Button.O
                     .show();
         }
     }
+    final String TAG = this.getClass().getSimpleName();
 
     /**
      * Creates the image file to which the image must be saved.
      * @return
      * @throws IOException
      */
-    protected File createImageFile() throws IOException {
+    protected File createImageFile(){
         // Create an image file name
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
         String imageFileName = "JPEG_" + timeStamp + "_";
         File storageDir = Environment.getExternalStoragePublicDirectory(
                 Environment.DIRECTORY_PICTURES);
-        File image = File.createTempFile(
-                imageFileName,  /* prefix */
-                ".jpg",         /* suffix */
-                storageDir      /* directory */
-        );
-
+        File image = null;
+        try {
+            Log.d(TAG, "abs : "+storageDir.getAbsolutePath());
+            image = File.createTempFile(
+                    imageFileName,  /* prefix */
+                    ".jpg",         /* suffix */
+                    storageDir      /* directory */
+            );
+            Log.d(TAG, image.getAbsolutePath());
+        }
+        catch(IOException e){
+            e.printStackTrace();
+        }
         // Save a file: path for use with ACTION_VIEW intents
-        CameraActivity activity = (CameraActivity)getActivity();
+        MainActivity activity = (MainActivity)getActivity();
         activity.setCurrentPhotoPath("file:" + image.getAbsolutePath());
         return image;
     }
@@ -210,7 +213,7 @@ public class SimpleCameraIntentFragment extends BaseFragment implements Button.O
      */
     protected void addPhotoToGallery() {
         Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
-        CameraActivity activity = (CameraActivity)getActivity();
+        MainActivity activity = (MainActivity)getActivity();
         File f = new File(activity.getCurrentPhotoPath());
         Uri contentUri = Uri.fromFile(f);
         mediaScanIntent.setData(contentUri);
