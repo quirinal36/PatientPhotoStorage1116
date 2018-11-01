@@ -183,8 +183,8 @@ public class PhotoUploadFragment extends Fragment {
         }){
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
-                SharedPreferences pref = getActivity().getSharedPreferences(getString(R.string.sharedpreference_name), Context.MODE_PRIVATE);
-                String unique = pref.getString(getString(R.string.device_uuid), "");
+               // SharedPreferences pref = getActivity().getSharedPreferences(getString(R.string.sharedpreference_name), Context.MODE_PRIVATE);
+               // String unique = pref.getString(getString(R.string.device_uuid), "");
                 Map<String, String> param = new HashMap<>();
 
                 param.put("patientId", _uploadPatientId.getText().toString());

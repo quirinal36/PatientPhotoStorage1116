@@ -22,6 +22,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import me.synology.hsbong.patientphotostorage.MainActivity;
 import me.synology.hsbong.patientphotostorage.R;
 import me.synology.hsbong.patientphotostorage.model.Board;
 import me.synology.hsbong.patientphotostorage.model.Patient;
@@ -35,7 +36,8 @@ import java.util.List;
 
 public class PhotoListFragment extends Fragment {
 
-        private static final String ARG_COLUMN_COUNT = "column-count";
+    final static String TITLE = "포토목록";
+    private static final String ARG_COLUMN_COUNT = "column-count";
         private int mColumnCount = 1;
         public static final String TAG = PhotoListFragment.class.getSimpleName();
         MyPhotoListRecyclerViewAdapter adapter;
@@ -83,6 +85,7 @@ public class PhotoListFragment extends Fragment {
             }
             return view;
         }
+
     private List<Photo> getDummyList(){
         List<Photo> list = new ArrayList<Photo>();
         Photo photo1 = new Photo();
@@ -115,8 +118,6 @@ public class PhotoListFragment extends Fragment {
         photo3.setUploader("전담간호사");
         photo3.setComment("병동 드레싱 사진입니다.");
 
-
-
         list.add(photo1);
         list.add(photo2);
         list.add(photo3);
@@ -147,11 +148,8 @@ public class PhotoListFragment extends Fragment {
                             JSONArray array = (JSONArray) resultJson.get("list");
                             Log.d(TAG, "array leng: " + array.length());
 
-
-
                             for(int i=0; i<array.length(); i++){
                                 JSONObject obj = new JSONObject(array.getString(i));
-
 
                                 Photo photo = new Photo();
                                 photo.setPatientId(obj.getInt("patientId"));
@@ -177,6 +175,12 @@ public class PhotoListFragment extends Fragment {
             }
         });
         rq.add(sr);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        ((MainActivity)getActivity()).getSupportActionBar().setTitle(this.TITLE);
     }
 
     }
