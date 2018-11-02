@@ -24,12 +24,8 @@ import org.json.JSONObject;
 
 import me.synology.hsbong.patientphotostorage.MainActivity;
 import me.synology.hsbong.patientphotostorage.R;
-import me.synology.hsbong.patientphotostorage.model.Board;
-import me.synology.hsbong.patientphotostorage.model.Patient;
 import me.synology.hsbong.patientphotostorage.model.Photo;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -157,7 +153,8 @@ public class PhotoListFragment extends Fragment {
                                 photo.setPhotoUrl(obj.getString("photoUrl").replaceAll("\\\\", ""));
                                 photo.setDate(obj.getString("date"));
 
-                                Log.d(TAG, photo.toString());
+                                //Log.d(TAG, photo.toString());
+                                //Log.d(TAG, obj.getString("photoUrl").replaceAll("\\\\", ""));
                                 list.add(photo);
                             }
 
