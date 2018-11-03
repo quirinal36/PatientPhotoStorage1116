@@ -1,7 +1,11 @@
 package me.synology.hsbong.patientphotostorage.list;
 
+import android.app.Activity;
 import android.content.Context;
 import android.media.Image;
+import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -14,13 +18,15 @@ import android.widget.Toast;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
+import me.synology.hsbong.patientphotostorage.MainActivity;
 import me.synology.hsbong.patientphotostorage.R;
 import me.synology.hsbong.patientphotostorage.model.Photo;
+import me.synology.hsbong.patientphotostorage.view.PhotoDetailFragment;
 
 import java.util.List;
 
 
-public class MyPhotoListRecyclerViewAdapter extends RecyclerView.Adapter<MyPhotoListRecyclerViewAdapter.ViewHolder> {
+public class MyPhotoListRecyclerViewAdapter extends RecyclerView.Adapter<MyPhotoListRecyclerViewAdapter.ViewHolder> implements View.OnClickListener{
 
         private final List<Photo> mValues;
         private final String TAG = this.getClass().getSimpleName();
@@ -38,13 +44,14 @@ public class MyPhotoListRecyclerViewAdapter extends RecyclerView.Adapter<MyPhoto
         public me.synology.hsbong.patientphotostorage.list.MyPhotoListRecyclerViewAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             View view = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.fragment_photolist, parent, false);
+            view.setOnClickListener(this);
             return new me.synology.hsbong.patientphotostorage.list.MyPhotoListRecyclerViewAdapter.ViewHolder(view);
         }
 
         @Override
         public void onBindViewHolder(final me.synology.hsbong.patientphotostorage.list.MyPhotoListRecyclerViewAdapter.ViewHolder holder, int position) {
             holder.mItem = mValues.get(position);
-
+            holder.mView.setTag(mValues.get(position).getPhotoId());
             holder.mIdView.setText(String.valueOf(mValues.get(position).getPatientId()));
             holder.mNameView.setText(mValues.get(position).getPatientName());
             holder.mClassificationView.setText(mValues.get(position).getClassification());
@@ -65,13 +72,7 @@ public class MyPhotoListRecyclerViewAdapter extends RecyclerView.Adapter<MyPhoto
                 });
             }
 
-            holder.mView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Log.d(TAG, holder.mIdView.getText().toString());
-                    Toast.makeText(mContext, holder.mIdView.getText().toString(), Toast.LENGTH_LONG).show();
-                }
-            });
+
         }
 
         @Override
@@ -79,7 +80,28 @@ public class MyPhotoListRecyclerViewAdapter extends RecyclerView.Adapter<MyPhoto
             return mValues.size();
         }
 
-        public class ViewHolder extends RecyclerView.ViewHolder {
+    @Override
+    public void onClick(View view) {
+        int id = (int)view.getTag();
+        Log.d(TAG, "id : " + id);
+
+                Fragment fragment = PhotoDetailFragment.newInstance(id);
+                FragmentTransaction fragmentTransaction = ((MainActivity)mContext).getSupportFragmentManager().beginTransaction();
+                fragmentTransaction.replace(R.id.content_main, fragment);
+                fragmentTransaction.addToBackStack(null);
+                fragmentTransaction.commit();
+                /*
+                fragment = new PhotoDetailFragment();
+        Bundle args = new Bundle();
+        int position = (int)view.getTag();
+        args.putInt("id", mValues.get(position).getPhotoId());
+        Log.d(TAG, "position : " + position);
+        Log.d(TAG, "id: " + mValues.get(position).getPhotoId());
+        fragment.setArguments(args);
+*/
+    }
+
+    public class ViewHolder extends RecyclerView.ViewHolder {
             public final View mView;
             public final TextView mIdView;
             public final TextView mNameView;

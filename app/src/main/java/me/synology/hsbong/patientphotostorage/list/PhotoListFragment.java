@@ -149,7 +149,8 @@ public class PhotoListFragment extends Fragment {
 
                                 Photo photo = new Photo();
                                 photo.setPatientId(obj.getInt("patientId"));
-                                photo.setPatientName(obj.getString("patientName"));
+                                photo.setPhotoId(obj.getInt("id"));
+                             //   photo.setPatientName(obj.getString("patientName"));
                                 photo.setPhotoUrl(obj.getString("photoUrl").replaceAll("\\\\", ""));
                                 photo.setDate(obj.getString("date"));
 
