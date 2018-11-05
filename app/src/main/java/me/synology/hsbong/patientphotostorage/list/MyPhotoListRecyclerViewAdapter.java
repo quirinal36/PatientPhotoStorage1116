@@ -62,7 +62,7 @@ public class MyPhotoListRecyclerViewAdapter extends RecyclerView.Adapter<MyPhoto
                 Picasso.with(mContext).load(mValues.get(position).getPhotoUrl()).placeholder(R.drawable.avatar).into(holder.mImageView, new Callback() {
                     @Override
                     public void onSuccess() {
-                        Toast.makeText(mContext, "성공", Toast.LENGTH_SHORT).show();
+                       // Toast.makeText(mContext, "성공", Toast.LENGTH_SHORT).show();
                     }
 
                     @Override

@@ -100,10 +100,10 @@ public class PatientListFragment extends Fragment {
 
 
                                 Patient patient = new Patient();
-                                patient.setId(obj.getInt("id"));
+                                patient.setPatientId(obj.getInt("id"));
                                 patient.setName(obj.getString("name"));
                                 patient.setPhoto(obj.getString("photo").replaceAll("\\\\", ""));
-                                patient.setP_date(obj.getString("p_date"));
+                               // patient.setP_date(obj.getString("p_date"));
 
                                 Log.d(TAG, patient.toString());
                                 list.add(patient);
@@ -146,7 +146,7 @@ public class PatientListFragment extends Fragment {
         public void bindItem(Patient patient){
             this.patient = patient;
             titleText.setText(patient.getName());
-            _hoder.setTag(patient.getId());
+            _hoder.setTag(patient.getPatientId());
             Picasso.with(getContext()).load(patient.getPhoto()).placeholder(R.drawable.avatar).into(thumbnailImg, new Callback() {
                 @Override
                 public void onSuccess() {
