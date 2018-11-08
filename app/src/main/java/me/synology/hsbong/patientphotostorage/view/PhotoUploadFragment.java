@@ -32,6 +32,8 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.zxing.integration.android.IntentIntegrator;
+import com.google.zxing.integration.android.IntentResult;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -57,8 +59,6 @@ import me.synology.hsbong.patientphotostorage.list.PhotoListFragment;
  * create an instance of this fragment.
  */
 public class PhotoUploadFragment extends Fragment {
-    final static String TITLE = "사진올리기";
-    private final int REQ_CODE = 1101;
 
     @BindView(R.id.sendPhotoInfoButton)
     Button _sendPhotoInfoButton;
@@ -79,16 +79,21 @@ public class PhotoUploadFragment extends Fragment {
     @BindView(R.id.upload_uploader)
     EditText _uploadUploader;
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
+    @BindView(R.id.qr_Button)
+    Button qrButton;
+
+    final static String TITLE = "사진올리기";
+    private final int REQ_CODE = 1101;
+
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
-    // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
 
     private static final String TAG = "PhotoUploadFragment";
+
+    private IntentIntegrator qrScan;
 
 
     public PhotoUploadFragment() {
@@ -132,6 +137,12 @@ public class PhotoUploadFragment extends Fragment {
 
 
         return view;
+    }
+
+    @OnClick(R.id.qr_Button)
+    public void qrButtonClick() {
+        qrScan = new IntentIntegrator(getActivity());
+        qrScan.initiateScan();
     }
 
     @OnClick(R.id.buttonUploadPhoto)
@@ -212,8 +223,34 @@ public class PhotoUploadFragment extends Fragment {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
+       // super.onActivityResult(requestCode, resultCode, data);
+       // Log.d(TAG, "onActivityResult");
+        IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
+        Log.d(TAG, "onActivityResult" + result.toString());
+
+        if (result != null && requestCode != REQ_CODE) {
+        if (result.getContents() == null) {
+            Toast.makeText(getContext(), "Result Not Found", Toast.LENGTH_LONG).show();
+        } else {
+            //if qr contains data
+            try {
+                //converting the data to json
+                 JSONObject obj = new JSONObject(result.getContents());
+                //setting values to editText
+                _uploadPatientId.setText(obj.getString("patientId"));
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+                //if control comes here
+                //that means the encoded format not matches
+                //in this case you can display whatever data is available on the qrcode
+                //to a toast
+                Toast.makeText(getContext(), "다른 형식의 코드 입니다 : "+result.getContents(), Toast.LENGTH_LONG).show();
+            }
+        }
+    } else {
         super.onActivityResult(requestCode, resultCode, data);
-        Log.d(TAG, "onActivityResult");
+    }
 
         if (requestCode == REQ_CODE && resultCode == Activity.RESULT_OK && data != null) {
             try {

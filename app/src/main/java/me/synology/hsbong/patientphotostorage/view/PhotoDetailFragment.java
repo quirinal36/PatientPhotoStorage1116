@@ -156,12 +156,12 @@ public class PhotoDetailFragment extends Fragment {
                             detailUploader.setText(obj.getString("uploader"));
                             detailComment.setText(obj.getString("comment"));
                             detailPatientId.setText(obj.getString("patientId"));
-                          //  detailPatientBirth.setText(obj.getString("patientBirth"));
+                            detailPatientBirth.setText(obj.getString("patientBirth"));
                             detailPatientName.setText(obj.getString("patientName"));
-                         //   detailPatientSex.setText(obj.getString("patientSex"));
-                          //  detailPatientPhone.setText(obj.getString("patientPhone"));
-                         //   detailPatientAddress.setText(obj.getString("patientAddress"));
-                          //  detailPatientEtc.setText(obj.getString("patientEtc"));
+                            detailPatientSex.setText(obj.getString("patientSex"));
+                            detailPatientPhone.setText(obj.getString("patientPhone"));
+                            detailPatientAddress.setText(obj.getString("patientAddress"));
+                            detailPatientEtc.setText(obj.getString("patientEtc"));
 
 
                         } catch (JSONException e) {
