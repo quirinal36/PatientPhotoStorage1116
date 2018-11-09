@@ -8,15 +8,21 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.FileProvider;
 import android.telephony.TelephonyManager;
 import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -34,11 +40,13 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
+import com.squareup.picasso.Picasso;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
@@ -50,6 +58,7 @@ import me.synology.hsbong.patientphotostorage.MainActivity;
 import me.synology.hsbong.patientphotostorage.R;
 import me.synology.hsbong.patientphotostorage.list.PatientListFragment;
 import me.synology.hsbong.patientphotostorage.list.PhotoListFragment;
+import me.synology.hsbong.patientphotostorage.util.FileUtil;
 
 
 /**
@@ -82,8 +91,15 @@ public class PhotoUploadFragment extends Fragment {
     @BindView(R.id.qr_Button)
     Button qrButton;
 
+    @BindView(R.id.button_Capture_Photo)
+    Button buttonCapturePhoto;
+
     final static String TITLE = "사진올리기";
     private final int REQ_CODE = 1101;
+    private final int PICK_FROM_CAMERA = 1106;
+
+    File imageFile;
+    String imageFileName;
 
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
@@ -97,6 +113,7 @@ public class PhotoUploadFragment extends Fragment {
 
 
     public PhotoUploadFragment() {
+
         // Required empty public constructor
     }
 
@@ -125,6 +142,15 @@ public class PhotoUploadFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+        Log.d(TAG, "mParam1: "+mParam1);
+
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        imageFileName = String.valueOf(System.currentTimeMillis());
+        imageFile = FileUtil.getInstance().getImageFile(getContext(), imageFileName);
     }
 
     @Deprecated
@@ -135,6 +161,9 @@ public class PhotoUploadFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_photo_upload, container, false);
         ButterKnife.bind(this, view);
 
+        if(mParam1!=null && mParam1.length()>0){
+            Picasso.with(getContext()).load(new File(mParam1)).into(_uploadImageView);
+        }
 
         return view;
     }
@@ -143,6 +172,21 @@ public class PhotoUploadFragment extends Fragment {
     public void qrButtonClick() {
         qrScan = new IntentIntegrator(getActivity());
         qrScan.initiateScan();
+    }
+
+    @OnClick(R.id.button_Capture_Photo)
+    public void capturePhoto() {
+        Uri uri;
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.N){
+            uri = FileProvider.getUriForFile(getContext(), "me.synology.hsbong.patientphotostorage.fileprovider", imageFile);
+        }
+        else{
+            uri = Uri.fromFile(imageFile);
+        }
+        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
+        intent.addFlags(intent.FLAG_GRANT_READ_URI_PERMISSION);
+        getActivity().startActivityForResult(intent, PICK_FROM_CAMERA);
     }
 
     @OnClick(R.id.buttonUploadPhoto)
@@ -224,35 +268,30 @@ public class PhotoUploadFragment extends Fragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
        // super.onActivityResult(requestCode, resultCode, data);
-       // Log.d(TAG, "onActivityResult");
-        IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
-        Log.d(TAG, "onActivityResult" + result.toString());
+        Log.d(TAG, "onActivityResult" + requestCode);
 
-        if (result != null && requestCode != REQ_CODE) {
-        if (result.getContents() == null) {
-            Toast.makeText(getContext(), "Result Not Found", Toast.LENGTH_LONG).show();
-        } else {
-            //if qr contains data
-            try {
-                //converting the data to json
-                 JSONObject obj = new JSONObject(result.getContents());
-                //setting values to editText
-                _uploadPatientId.setText(obj.getString("patientId"));
+        if (requestCode == IntentIntegrator.REQUEST_CODE) {
+            IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
+            if (result.getContents() == null) {
+                Toast.makeText(getContext(), "Result Not Found", Toast.LENGTH_LONG).show();
+            } else if(result != null){
+                //if qr contains data
+                try {
+                    //converting the data to json
+                     JSONObject obj = new JSONObject(result.getContents());
+                    //setting values to editText
+                    _uploadPatientId.setText(obj.getString("patientId"));
 
-            } catch (JSONException e) {
-                e.printStackTrace();
-                //if control comes here
-                //that means the encoded format not matches
-                //in this case you can display whatever data is available on the qrcode
-                //to a toast
-                Toast.makeText(getContext(), "다른 형식의 코드 입니다 : "+result.getContents(), Toast.LENGTH_LONG).show();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    //if control comes here
+                    //that means the encoded format not matches
+                    //in this case you can display whatever data is available on the qrcode
+                    //to a toast
+                    Toast.makeText(getContext(), "다른 형식의 코드 입니다 : "+result.getContents(), Toast.LENGTH_LONG).show();
+                }
             }
-        }
-    } else {
-        super.onActivityResult(requestCode, resultCode, data);
-    }
-
-        if (requestCode == REQ_CODE && resultCode == Activity.RESULT_OK && data != null) {
+        } else if (requestCode == REQ_CODE && resultCode == Activity.RESULT_OK && data != null) {
             try {
                 Bitmap bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), data.getData());
                 ByteArrayOutputStream bytes = new ByteArrayOutputStream();
@@ -267,8 +306,14 @@ public class PhotoUploadFragment extends Fragment {
             } catch (Exception e){
                 e.printStackTrace();
             }
+        } else if (requestCode == PICK_FROM_CAMERA && resultCode == Activity.RESULT_OK ){
+            Picasso.with(getContext()).load(imageFile).into(_uploadImageView);
+
         }
+
     }
+
+
 
     @Override
     public void onResume() {
