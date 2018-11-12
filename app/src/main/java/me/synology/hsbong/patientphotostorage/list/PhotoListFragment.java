@@ -185,6 +185,8 @@ public class PhotoListFragment extends Fragment {
     @Override
         public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
+
+        /*
         menu.clear();
         inflater.inflate(R.menu.menu_search, menu);
         MenuItem item = menu.findItem(R.id.action_search);
@@ -210,7 +212,7 @@ public class PhotoListFragment extends Fragment {
 
             }
         });
-
+*/
     }
 
     @Override

@@ -300,19 +300,24 @@ public class MainActivity extends AppCompatActivity
 
         int id = item.getItemId();
 
-        if (id == R.id.nav_camera) {
+        if (id == R.id.nav_list) {
             // Handle the camera action
            // Intent intent = new Intent(context, LoginActivity.class);
            // startActivity(intent);
             fragment = new PhotoListFragment();
 
-        } else if (id == R.id.nav_gallery) {
+        } else if (id == R.id.nav_register) {
+            fragment = new PhotoUploadFragment();
+
+        } else if (id == R.id.nav_emergency) {
             fragment = new BoardFragment();
 
-        } else if (id == R.id.nav_slideshow) {
-            fragment = new SimpleCameraIntentFragment();
+        } else if (id == R.id.nav_bookmark) {
 
-        } else if (id == R.id.nav_manage) {
+
+        } else if (id == R.id.nav_board) {
+            //fragment = new PhotoUploadFragment();
+        } else if (id == R.id.nav_setting) {
             SharedPreferences pref = getSharedPreferences("bacoder", MODE_PRIVATE);
             String phone = EtcLib.getInstance().getPhoneNumber(this);
 
@@ -322,13 +327,10 @@ public class MainActivity extends AppCompatActivity
             args.putString("param2", pref.getString("device_uuid",""));
             fragment.setArguments(args);
 
-        } else if (id == R.id.nav_share) {
-            fragment = new PhotoUploadFragment();
-
-        } else if (id == R.id.nav_send) {
-         //   fragment = new SignupFragment();
-
         }
+
+
+
 
         if(fragment != null) {
             fragmentTransaction.replace(R.id.content_main, fragment);

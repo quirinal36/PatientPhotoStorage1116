@@ -5,33 +5,33 @@
 
     <group android:checkableBehavior="single">
         <item
-            android:id="@+id/nav_camera"
-            android:icon="@drawable/ic_login"
-            android:title="환자리스트" />
-        <item
-            android:id="@+id/nav_gallery"
+            android:id="@+id/nav_list"
             android:icon="@drawable/ic_menu_gallery"
-            android:title="정보검색" />
+            android:title="환자 조회" />
         <item
-            android:id="@+id/nav_slideshow"
-            android:icon="@drawable/ic_menu_slideshow"
+            android:id="@+id/nav_register"
+            android:icon="@drawable/ic_menu_camera"
+            android:title="정보 등록" />
+        <item
+            android:id="@+id/nav_emergency"
+            android:icon="@drawable/ic_menu_er"
+            android:title="응급환자 조회" />
+        <item
+            android:id="@+id/nav_bookmark"
+            android:icon="@drawable/ic_menu_star"
             android:title="즐겨찾기" />
-        <item
-            android:id="@+id/nav_manage"
-            android:icon="@drawable/ic_menu_manage"
-            android:title="내정보" />
     </group>
 
     <item android:title="Communicate">
         <menu>
             <item
-                android:id="@+id/nav_share"
-                android:icon="@drawable/ic_menu_share"
-                android:title="Share" />
+                android:id="@+id/nav_board"
+                android:icon="@drawable/ic_menu_board"
+                android:title="게시판" />
             <item
-                android:id="@+id/nav_send"
-                android:icon="@drawable/ic_menu_send"
-                android:title="회원가입" />
+                android:id="@+id/nav_setting"
+                android:icon="@drawable/ic_menu_manage"
+                android:title="설정" />
         </menu>
     </item>
 
