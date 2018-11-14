@@ -25,9 +25,11 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -80,10 +82,10 @@ public class PhotoUploadFragment extends Fragment {
     EditText _uploadPatientId;
     @BindView(R.id.upload_patientName)
     EditText _uploadPatientName;
-    @BindView(R.id.upload_classification)
-    EditText _uploadClassification;
+    @BindView(R.id.classification_Spinner)
+    Spinner _uploadClassification;
     @BindView(R.id.upload_doctor)
-    EditText _uploadDoctor;
+    Spinner _uploadDoctor;
 
     @BindView(R.id.upload_uploader)
     EditText _uploadUploader;
@@ -100,6 +102,10 @@ public class PhotoUploadFragment extends Fragment {
 
     File imageFile;
     String imageFileName;
+
+    private ArrayAdapter adapter;
+    private ArrayAdapter adapter2;
+
 
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
@@ -164,6 +170,11 @@ public class PhotoUploadFragment extends Fragment {
         if(mParam1!=null && mParam1.length()>0){
             Picasso.with(getContext()).load(new File(mParam1)).into(_uploadImageView);
         }
+
+        adapter = ArrayAdapter.createFromResource(getActivity(), R.array.classification, android.R.layout.simple_spinner_dropdown_item);
+        _uploadClassification.setAdapter(adapter);
+        adapter2 = ArrayAdapter.createFromResource(getActivity(), R.array.doctor, android.R.layout.simple_spinner_dropdown_item);
+        _uploadDoctor.setAdapter(adapter2);
 
         return view;
     }
@@ -245,8 +256,8 @@ public class PhotoUploadFragment extends Fragment {
                 param.put("patientId", _uploadPatientId.getText().toString());
                 Log.d(TAG, _uploadPatientId.getText().toString());
                 param.put("patientName", _uploadPatientName.getText().toString());
-                param.put("classification", _uploadClassification.getText().toString());
-                param.put("doctor", _uploadDoctor.getText().toString());
+                param.put("classification", _uploadClassification.getSelectedItem().toString());
+                param.put("doctor", _uploadDoctor.getSelectedItem().toString());
                 param.put("uploader", _uploadUploader.getText().toString());
               //  param.put("date", _uploadDate.getText().toString());
                 //  param.put("comment", _uploadPatientId.getText().toString());

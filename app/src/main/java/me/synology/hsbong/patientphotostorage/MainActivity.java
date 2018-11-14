@@ -55,7 +55,6 @@ import java.io.IOException;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import me.synology.hsbong.patientphotostorage.fragment.SimpleCameraIntentFragment;
 import me.synology.hsbong.patientphotostorage.list.BoardFragment;
 import me.synology.hsbong.patientphotostorage.list.PatientListFragment;
 import me.synology.hsbong.patientphotostorage.list.PhotoListFragment;

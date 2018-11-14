@@ -21,4 +21,16 @@
         <item>기타정보</item>
         <item>환자정보</item>
     </string-array>
+
+    <string-array name="doctor">
+        <item>이병호</item>
+        <item>장선웅</item>
+        <item>이돈석</item>
+        <item>봉황세</item>
+        <item>김태균</item>
+        <item>이상진</item>
+        <item>황호범</item>
+        <item>응급의</item>
+
+    </string-array>
 </resources>

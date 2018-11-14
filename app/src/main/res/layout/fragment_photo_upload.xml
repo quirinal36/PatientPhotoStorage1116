@@ -88,11 +88,15 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
+
             android:text="분류: "/>
-        <EditText
-            android:layout_width="100dp"
+        <Spinner
+            android:layout_width="150dp"
             android:layout_height="wrap_content"
-            android:id="@+id/upload_classification" />
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="10dp"
+            android:id="@+id/classification_Spinner"></Spinner>
 
     </LinearLayout>
     <LinearLayout
@@ -103,11 +107,15 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+
             android:text="주치의: "/>
-        <EditText
-            android:layout_width="100dp"
+        <Spinner
+            android:layout_width="120dp"
             android:layout_height="wrap_content"
-            android:id="@+id/upload_doctor"/>
+            android:layout_gravity="center"
+            android:layout_marginLeft="10dp"
+            android:id="@+id/upload_doctor"></Spinner>
 
     </LinearLayout>
 
