@@ -123,7 +123,8 @@ public class MainActivity extends AppCompatActivity
         context = getApplicationContext();
 
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        Fragment fragment = new PatientListFragment();
+        Fragment fragment = new PhotoListFragment();
+
         fragmentTransaction.replace(R.id.content_main , fragment);
         fragmentTransaction.commit();
 
@@ -233,6 +234,7 @@ public class MainActivity extends AppCompatActivity
     @BindView(R.id.search_button)
     ImageButton searchButton;
 
+AlertDialog dialog;
 
     private void searchCustomDialog() {
 
@@ -242,7 +244,9 @@ public class MainActivity extends AppCompatActivity
         builder.setView(layout);
 
 
-        builder.create().show();
+        dialog = builder.create();
+        dialog.show();
+
 
         ImageButton searchButton = (ImageButton) layout.findViewById(R.id.search_button);
         ImageButton imageButton = (ImageButton) layout.findViewById(R.id.qr_code_search);
@@ -259,7 +263,16 @@ public class MainActivity extends AppCompatActivity
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.search_button) {
-            Toast.makeText(this,"search", Toast.LENGTH_LONG).show();
+           // Toast.makeText(this, ""+searchContent.getText(), Toast.LENGTH_LONG).show();
+            Fragment fragment = null;
+            FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+            fragment = new PhotoListFragment();
+            Bundle args = new Bundle();
+            args.putString("param1", searchContent.getText().toString());
+            fragment.setArguments(args);
+            fragmentTransaction.replace(R.id.content_main, fragment);
+            fragmentTransaction.commit();
+            dialog.dismiss();
         }
         if (id == R.id.qr_code_search) {
             Toast.makeText(this,"qrcode", Toast.LENGTH_LONG).show();
@@ -303,6 +316,9 @@ public class MainActivity extends AppCompatActivity
             // Handle the camera action
            // Intent intent = new Intent(context, LoginActivity.class);
            // startActivity(intent);
+            fragment = new PhotoListFragment();
+
+        } else if (id == R.id.nav_photolist) {
             fragment = new PhotoListFragment();
 
         } else if (id == R.id.nav_register) {

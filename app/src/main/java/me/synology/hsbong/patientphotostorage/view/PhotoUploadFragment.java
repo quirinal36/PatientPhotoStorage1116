@@ -245,6 +245,7 @@ public class PhotoUploadFragment extends Fragment {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Log.d(TAG, "error listener");
+                Toast.makeText(getContext(), "전송에 실패했습니다", Toast.LENGTH_LONG).show();
             }
         }){
             @Override

@@ -1,5 +1,6 @@
 package me.synology.hsbong.patientphotostorage.list;
 
+import android.app.AlertDialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -44,6 +45,10 @@ public class PhotoListFragment extends Fragment {
         public static final String TAG = PhotoListFragment.class.getSimpleName();
         MyPhotoListRecyclerViewAdapter adapter;
 
+    private static final String ARG_PARAM1 = "param1";
+    private String mParam1;
+
+
         public PhotoListFragment() {
         }
 
@@ -63,8 +68,11 @@ public class PhotoListFragment extends Fragment {
 
             if (getArguments() != null) {
                 mColumnCount = getArguments().getInt(ARG_COLUMN_COUNT);
+                mParam1 = getArguments().getString(ARG_PARAM1);
+                Log.d(TAG, "***mParam1*** :" + mParam1);
             }
             setHasOptionsMenu(true);
+
         }
 
         @Override
@@ -89,6 +97,7 @@ public class PhotoListFragment extends Fragment {
             return view;
         }
 
+        /*
     private List<Photo> getDummyList(){
         List<Photo> list = new ArrayList<Photo>();
         Photo photo1 = new Photo();
@@ -134,13 +143,18 @@ public class PhotoListFragment extends Fragment {
         list.add(photo2);
         return list;
     }
+*/
 
     private void updateAdapter(final RecyclerView recyclerView){
+
+        if (mParam1 == null){
+            mParam1 = "0";
+        }
 
         final List<Photo> list = new ArrayList<>();
         RequestQueue rq = Volley.newRequestQueue(getContext());
         StringBuilder url = new StringBuilder();
-        url.append("http://www.bacoder.kr/getPhoto.jsp?patientId=1");
+        url.append("http://www.bacoder.kr/getPhoto.jsp").append("?patientId=").append(mParam1);
         StringRequest sr = new StringRequest(Request.Method.GET, url.toString(),
                 new Response.Listener<String>() {
                     @Override
@@ -157,14 +171,21 @@ public class PhotoListFragment extends Fragment {
                                 Photo photo = new Photo();
                                 photo.setPatientId(obj.getInt("patientId"));
                                 photo.setPhotoId(obj.getInt("id"));
-                             //   photo.setPatientName(obj.getString("patientName"));
+                                photo.setPatientName(obj.getString("patientName"));
                                 photo.setPhotoUrl(obj.getString("photoUrl").replaceAll("\\\\", ""));
                                 photo.setDate(obj.getString("date"));
 
-                                //Log.d(TAG, photo.toString());
+                                Log.d(TAG, photo.getPhotoUrl().toString());
                                 //Log.d(TAG, obj.getString("photoUrl").replaceAll("\\\\", ""));
                                 list.add(photo);
                             }
+
+                            if(list.size() < 1){
+                                Toast.makeText(getContext(), "검색 결과가 없습니다", Toast.LENGTH_LONG).show();
+                            }else{
+                                Toast.makeText(getContext(), "총 "+list.size()+"건의 정보를 찾았습니다.", Toast.LENGTH_LONG).show();
+                            }
+
 
                             adapter = new MyPhotoListRecyclerViewAdapter(list, getContext());
                             recyclerView.setAdapter(adapter);
@@ -178,6 +199,7 @@ public class PhotoListFragment extends Fragment {
             @Override
             public void onErrorResponse(VolleyError error) {
             }
+
         });
         rq.add(sr);
     }

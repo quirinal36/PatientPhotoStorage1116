@@ -52,6 +52,11 @@ public class MyPhotoListRecyclerViewAdapter extends RecyclerView.Adapter<MyPhoto
         public void onBindViewHolder(final me.synology.hsbong.patientphotostorage.list.MyPhotoListRecyclerViewAdapter.ViewHolder holder, int position) {
             holder.mItem = mValues.get(position);
             holder.mView.setTag(mValues.get(position).getPhotoId());
+
+            if (mValues.get(position).getPatientName()==null || mValues.get(position).getPatientName().equals("") ) {
+                holder.mView.setBackgroundColor(mContext.getResources().getColor(android.R.color.holo_orange_light));
+            }
+
             holder.mIdView.setText(String.valueOf(mValues.get(position).getPatientId()));
             holder.mNameView.setText(mValues.get(position).getPatientName());
             holder.mClassificationView.setText(mValues.get(position).getClassification());
