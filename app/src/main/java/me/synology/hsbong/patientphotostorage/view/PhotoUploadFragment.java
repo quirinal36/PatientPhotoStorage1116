@@ -148,7 +148,7 @@ public class PhotoUploadFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
-        Log.d(TAG, "mParam1: "+mParam1);
+        Log.d(TAG, "mParam1: " + mParam1);
 
     }
 
@@ -167,7 +167,7 @@ public class PhotoUploadFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_photo_upload, container, false);
         ButterKnife.bind(this, view);
 
-        if(mParam1!=null && mParam1.length()>0){
+        if (mParam1 != null && mParam1.length() > 0) {
             Picasso.with(getContext()).load(new File(mParam1)).into(_uploadImageView);
         }
 
@@ -188,10 +188,9 @@ public class PhotoUploadFragment extends Fragment {
     @OnClick(R.id.button_Capture_Photo)
     public void capturePhoto() {
         Uri uri;
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.N){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             uri = FileProvider.getUriForFile(getContext(), "me.synology.hsbong.patientphotostorage.fileprovider", imageFile);
-        }
-        else{
+        } else {
             uri = Uri.fromFile(imageFile);
         }
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -205,7 +204,8 @@ public class PhotoUploadFragment extends Fragment {
         Intent i = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         getActivity().startActivityForResult(i, REQ_CODE);
     }
-    public void onSignupFailed(){
+
+    public void onSignupFailed() {
         Log.d(TAG, "please fill edit texts");
     }
 
@@ -214,7 +214,7 @@ public class PhotoUploadFragment extends Fragment {
 
         _sendPhotoInfoButton.setEnabled(false);
 
-        final String signupPage = getString(R.string.server_address) + "/addPhoto.jsp";
+        final String signupPage = getString(R.string.upload_address) + "/addPhoto.jsp";
 
         StringRequest jsonObjectRequest = new StringRequest(Request.Method.POST, signupPage,
                 new Response.Listener<String>() {
@@ -230,7 +230,7 @@ public class PhotoUploadFragment extends Fragment {
                                 // 성공
 
                                 Toast.makeText(getContext(), "성공", Toast.LENGTH_LONG).show();
-                                FragmentTransaction fragmentTransaction = ((MainActivity)getActivity()).getSupportFragmentManager().beginTransaction();
+                                FragmentTransaction fragmentTransaction = ((MainActivity) getActivity()).getSupportFragmentManager().beginTransaction();
                                 fragmentTransaction.replace(R.id.content_main, new PhotoListFragment());
                                 fragmentTransaction.commit();
                             } else {
@@ -247,11 +247,11 @@ public class PhotoUploadFragment extends Fragment {
                 Log.d(TAG, "error listener");
                 Toast.makeText(getContext(), "전송에 실패했습니다", Toast.LENGTH_LONG).show();
             }
-        }){
+        }) {
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
-               // SharedPreferences pref = getActivity().getSharedPreferences(getString(R.string.sharedpreference_name), Context.MODE_PRIVATE);
-               // String unique = pref.getString(getString(R.string.device_uuid), "");
+                // SharedPreferences pref = getActivity().getSharedPreferences(getString(R.string.sharedpreference_name), Context.MODE_PRIVATE);
+                // String unique = pref.getString(getString(R.string.device_uuid), "");
                 Map<String, String> param = new HashMap<>();
 
                 param.put("patientId", _uploadPatientId.getText().toString());
@@ -260,14 +260,22 @@ public class PhotoUploadFragment extends Fragment {
                 param.put("classification", _uploadClassification.getSelectedItem().toString());
                 param.put("doctor", _uploadDoctor.getSelectedItem().toString());
                 param.put("uploader", _uploadUploader.getText().toString());
-              //  param.put("date", _uploadDate.getText().toString());
+                //  param.put("date", _uploadDate.getText().toString());
                 //  param.put("comment", _uploadPatientId.getText().toString());
 
 
-
-                if(_uploadImageView.getTag() != null) {
+                if (_uploadImageView.getTag() != null) {
+                    Log.d(TAG, "upload image contained");
                     param.put("filename", "upload.jpg");
-                    param.put("image", _uploadImageView.getTag().toString());
+                    try {
+                        String paramImage = _uploadImageView.getTag().toString();
+                        Log.d(TAG, "length : " + paramImage.length());
+                        param.put("image", paramImage);
+                    }catch(Exception e){
+                        e.printStackTrace();
+                    }
+                }else{
+                    Log.d(TAG, "upload image not~!!! contained");
                 }
 
                 return param;
@@ -279,18 +287,18 @@ public class PhotoUploadFragment extends Fragment {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-       // super.onActivityResult(requestCode, resultCode, data);
+        // super.onActivityResult(requestCode, resultCode, data);
         Log.d(TAG, "onActivityResult" + requestCode);
 
         if (requestCode == IntentIntegrator.REQUEST_CODE) {
             IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
             if (result.getContents() == null) {
                 Toast.makeText(getContext(), "Result Not Found", Toast.LENGTH_LONG).show();
-            } else if(result != null){
+            } else if (result != null) {
                 //if qr contains data
                 try {
                     //converting the data to json
-                     JSONObject obj = new JSONObject(result.getContents());
+                    JSONObject obj = new JSONObject(result.getContents());
                     //setting values to editText
                     _uploadPatientId.setText(obj.getString("patientId"));
 
@@ -300,14 +308,14 @@ public class PhotoUploadFragment extends Fragment {
                     //that means the encoded format not matches
                     //in this case you can display whatever data is available on the qrcode
                     //to a toast
-                    Toast.makeText(getContext(), "다른 형식의 코드 입니다 : "+result.getContents(), Toast.LENGTH_LONG).show();
+                    Toast.makeText(getContext(), "다른 형식의 코드 입니다 : " + result.getContents(), Toast.LENGTH_LONG).show();
                 }
             }
         } else if (requestCode == REQ_CODE && resultCode == Activity.RESULT_OK && data != null) {
             try {
                 Bitmap bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), data.getData());
                 ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-                bitmap.compress(Bitmap.CompressFormat.JPEG, 90, bytes);
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 50, bytes);
                 byte bb[] = bytes.toByteArray();
                 String file = Base64.encodeToString(bb, Base64.DEFAULT);
 
@@ -315,10 +323,10 @@ public class PhotoUploadFragment extends Fragment {
                 _uploadImageView.setTag(file);
             } catch (IOException e) {
                 e.printStackTrace();
-            } catch (Exception e){
+            } catch (Exception e) {
                 e.printStackTrace();
             }
-        } else if (requestCode == PICK_FROM_CAMERA && resultCode == Activity.RESULT_OK ){
+        } else if (requestCode == PICK_FROM_CAMERA && resultCode == Activity.RESULT_OK) {
             Picasso.with(getContext()).load(imageFile).into(_uploadImageView);
 
         }
@@ -326,10 +334,9 @@ public class PhotoUploadFragment extends Fragment {
     }
 
 
-
     @Override
     public void onResume() {
         super.onResume();
-        ((MainActivity)getActivity()).getSupportActionBar().setTitle(this.TITLE);
+        ((MainActivity) getActivity()).getSupportActionBar().setTitle(this.TITLE);
     }
 }

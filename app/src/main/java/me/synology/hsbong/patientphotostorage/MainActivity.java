@@ -31,6 +31,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -74,29 +75,26 @@ public class MainActivity extends AppCompatActivity
 
     private IntentIntegrator qrScan;
 
+    private String searchInput = "";
+    @BindView(R.id.search_content)
+    EditText searchContent;
+    @BindView(R.id.search_button)
+    ImageButton searchButton;
+
+    AlertDialog dialog;
 
     File imageFile;
     String imageFileName;
     boolean afterCapture = false;
 
     Context context;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-/*
-        ActionBar actionBar = getSupportActionBar();
-        actionBar.setDisplayHomeAsUpEnabled(true);
-        actionBar.setDisplayShowCustomEnabled(true);
-        actionBar.setDisplayShowTitleEnabled(false);
-        actionBar.setIcon(R.drawable.ic_action_search);
-
-        LayoutInflater inflator = (LayoutInflater) this .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View v = inflator.inflate(R.layout.search, null);
-        actionBar.setCustomView(v);
-*/
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -119,23 +117,17 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-
         context = getApplicationContext();
 
-        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        Fragment fragment = new PhotoListFragment();
-
-        fragmentTransaction.replace(R.id.content_main , fragment);
-        fragmentTransaction.commit();
+        replacePhotoListFragment("1");
 
     }
 
     public void capturePhoto(File imageFile) {
         Uri uri;
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.N){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             uri = FileProvider.getUriForFile(this, "me.synology.hsbong.patientphotostorage.fileprovider", imageFile);
-        }
-        else{
+        } else {
             uri = Uri.fromFile(imageFile);
         }
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -151,7 +143,7 @@ public class MainActivity extends AppCompatActivity
             drawer.closeDrawer(GravityCompat.START);
         } else {
             Log.d(TAG, "count: " + getSupportFragmentManager().getBackStackEntryCount());
-            if(getSupportFragmentManager().getBackStackEntryCount() == 0){
+            if (getSupportFragmentManager().getBackStackEntryCount() == 0) {
                 showFinishDialog();
                 return;
             }
@@ -159,7 +151,7 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    private void showFinishDialog(){
+    private void showFinishDialog() {
         new MaterialDialog.Builder(this)
                 .title("종료")
                 .content("앱을 종료할까요?")
@@ -184,69 +176,24 @@ public class MainActivity extends AppCompatActivity
 
         MenuItem item = menu.findItem(R.id.action_search);
         SearchView searchView = new SearchView(this.getSupportActionBar().getThemedContext());
-        /*
-        MenuItemCompat.setShowAsAction(item, MenuItemCompat.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW |
-                MenuItemCompat.SHOW_AS_ACTION_IF_ROOM);
-        MenuItemCompat.setActionView(item, searchView);
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                Toast.makeText(getApplicationContext(), query, Toast.LENGTH_LONG).show();
-                return false;
-            }
 
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                return false;
-            }
-        });
-        */
         searchView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
             }
         });
-
-
-
         return true;
     }
 
-    private String searchInput = "";
-    private void searchDialog() {
-
-        new MaterialDialog.Builder(this)
-                .title("검색")
-                .inputType(InputType.TYPE_CLASS_TEXT)
-                .input("등록번호", null, new MaterialDialog.InputCallback() {
-                    @Override
-                    public void onInput(@NonNull MaterialDialog dialog, CharSequence input) {
-                        searchInput = input.toString();
-                    }
-                })
-                .show();
-    }
-
-
-    @BindView(R.id.search_content)
-    EditText searchContent;
-    @BindView(R.id.search_button)
-    ImageButton searchButton;
-
-AlertDialog dialog;
-
     private void searchCustomDialog() {
-
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         LayoutInflater inflater = getLayoutInflater();
         View layout = inflater.inflate(R.layout.search_dialog, null);
         builder.setView(layout);
 
-
         dialog = builder.create();
         dialog.show();
-
 
         ImageButton searchButton = (ImageButton) layout.findViewById(R.id.search_button);
         ImageButton imageButton = (ImageButton) layout.findViewById(R.id.qr_code_search);
@@ -254,36 +201,48 @@ AlertDialog dialog;
         searchButton.setOnClickListener(this);
         imageButton.setOnClickListener(this);
 
+        /* 다이얼로그가 열릴 때 키보드가 보여지게 한다 */
         searchContent = (EditText) layout.findViewById(R.id.search_content);
+        searchContent.post(new Runnable() {
+            @Override
+            public void run() {
+                searchContent.setFocusableInTouchMode(true);
+                searchContent.requestFocus();
+                InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.showSoftInput(searchContent, 0);
+            }
+        });
     }
 
+    private void replacePhotoListFragment(String search){
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        Fragment fragment = PhotoListFragment.newInstance(1, search);
+        fragmentTransaction.replace(R.id.content_main, fragment);
+        fragmentTransaction.commit();
+    }
     @Override
     public void onClick(View view) {
         int id = view.getId();
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.search_button) {
-           // Toast.makeText(this, ""+searchContent.getText(), Toast.LENGTH_LONG).show();
-            Fragment fragment = null;
-            FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-            fragment = new PhotoListFragment();
-            Bundle args = new Bundle();
-            args.putString("param1", searchContent.getText().toString());
-            fragment.setArguments(args);
-            fragmentTransaction.replace(R.id.content_main, fragment);
-            fragmentTransaction.commit();
+            String searchQuery = searchContent.getText().toString();
+
+            Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.content_main);
+            if(fragment instanceof PhotoListFragment){
+                PhotoListFragment listFragment = (PhotoListFragment)fragment;
+                listFragment.apaterReroad(searchQuery);
+            }else{
+                replacePhotoListFragment(searchQuery);
+            }
             dialog.dismiss();
-        }
-        if (id == R.id.qr_code_search) {
-            Toast.makeText(this,"qrcode", Toast.LENGTH_LONG).show();
+        }else if (id == R.id.qr_code_search) {
+            Toast.makeText(this, "qrcode", Toast.LENGTH_LONG).show();
             qrScan = new IntentIntegrator(this);
             qrScan.initiateScan();
         }
 
     }
-
-
-
 
 
     @Override
@@ -295,8 +254,6 @@ AlertDialog dialog;
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_search) {
-            Log.d(TAG, "searchDialog");
-           // searchDialog();
             searchCustomDialog();
         }
 
@@ -314,8 +271,8 @@ AlertDialog dialog;
 
         if (id == R.id.nav_list) {
             // Handle the camera action
-           // Intent intent = new Intent(context, LoginActivity.class);
-           // startActivity(intent);
+            // Intent intent = new Intent(context, LoginActivity.class);
+            // startActivity(intent);
             fragment = new PhotoListFragment();
 
         } else if (id == R.id.nav_photolist) {
@@ -339,15 +296,13 @@ AlertDialog dialog;
             fragment = new MyInfoFragment();
             Bundle args = new Bundle();
             args.putString("param1", phone);
-            args.putString("param2", pref.getString("device_uuid",""));
+            args.putString("param2", pref.getString("device_uuid", ""));
             fragment.setArguments(args);
 
         }
 
 
-
-
-        if(fragment != null) {
+        if (fragment != null) {
             fragmentTransaction.replace(R.id.content_main, fragment);
             fragmentTransaction.commit();
         }
@@ -368,7 +323,7 @@ AlertDialog dialog;
         ((MyApp) getApplicationContext()).getUserInfo("profilePhoto");
 
         Picasso.with(getApplicationContext()).load(((MyApp) getApplicationContext()).getUserInfo("profilePhoto")).placeholder(R.drawable.avatar).error(R.drawable.avatar).into(imageView);
-        imageView.setOnClickListener(new View.OnClickListener(){
+        imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 SharedPreferences pref = getSharedPreferences("bacoder", MODE_PRIVATE);
@@ -379,13 +334,13 @@ AlertDialog dialog;
                 fragment = new MyInfoFragment();
                 Bundle args = new Bundle();
                 args.putString("param1", phone);
-                args.putString("param2", pref.getString("device_uuid",""));
+                args.putString("param2", pref.getString("device_uuid", ""));
                 fragment.setArguments(args);
                 fragmentTransaction.replace(R.id.content_main, fragment);
                 fragmentTransaction.commit();
 
-              DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-              drawer.closeDrawer(GravityCompat.START);
+                DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+                drawer.closeDrawer(GravityCompat.START);
             }
         });
     }
@@ -393,22 +348,21 @@ AlertDialog dialog;
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
-        if(requestCode == MAIN_REQ_CODE){
+        if (requestCode == MAIN_REQ_CODE) {
             afterCapture = true;
 
-            Log.d(TAG, "imageFile: "+ imageFileName);
+            Log.d(TAG, "imageFile: " + imageFileName);
 
         } else if (requestCode == IntentIntegrator.REQUEST_CODE) {
             IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
             if (result.getContents() == null) {
                 Toast.makeText(this, "Result Not Found", Toast.LENGTH_LONG).show();
-            } else if(result != null){
+            } else if (result != null) {
                 //if qr contains data
                 try {
                     //converting the data to json
                     JSONObject obj = new JSONObject(result.getContents());
                     //setting values to editText
-                    Log.d(TAG, obj.getString("patientId"));
                     searchContent.setText(obj.getString("patientId"));
 
                 } catch (JSONException e) {
@@ -417,23 +371,20 @@ AlertDialog dialog;
                     //that means the encoded format not matches
                     //in this case you can display whatever data is available on the qrcode
                     //to a toast
-                    Toast.makeText(this, "다른 형식의 코드 입니다 : "+result.getContents(), Toast.LENGTH_LONG).show();
+                    Toast.makeText(this, "다른 형식의 코드 입니다 : " + result.getContents(), Toast.LENGTH_LONG).show();
                 }
             }
-        }
-
-        else {
+        } else {
             Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.content_main);
             fragment.onActivityResult(requestCode, resultCode, data);
         }
     }
 
 
-
     @Override
     protected void onResume() {
         super.onResume();
-        if(afterCapture){
+        if (afterCapture) {
             try {
                 Fragment fragment = PhotoUploadFragment.newInstance(imageFile.getCanonicalPath(), null);
                 FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
@@ -441,8 +392,7 @@ AlertDialog dialog;
                 fragmentTransaction.addToBackStack(null);
                 fragmentTransaction.commit();
                 afterCapture = false;
-            }
-            catch (IOException e){
+            } catch (IOException e) {
 
             }
         }

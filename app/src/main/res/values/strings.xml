@@ -15,6 +15,7 @@
     <string name="title_button_get_image">프로필사진</string>
 
     <string name="server_address">http://www.bacoder.kr</string>
+    <string name="upload_address">http://upload.bacoder.kr</string>
     <string name="sp_name">bacoder</string>
 
     <string name="sharedpreference_name">bacoder</string>
