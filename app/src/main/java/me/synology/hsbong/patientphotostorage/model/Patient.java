@@ -17,7 +17,24 @@ public class Patient {
     private String address;
     private String memo;
     private String photo;
+    private String room;
+    private boolean admission;
 
+    public boolean isAdmission() {
+        return admission;
+    }
+
+    public void setAdmission(boolean admission) {
+        this.admission = admission;
+    }
+
+    public String getRoom() {
+        return room;
+    }
+
+    public void setRoom(String room) {
+        this.room = room;
+    }
 
     public String getDoctor() {
         return doctor;
